@@ -24,10 +24,12 @@ jobs:
             c_compiler: gcc
             cpp_compiler: g++
             build_type: MinSizeRel
+            cxx_flags: "-Wall -Wextra -Wshadow -Wpedantic -Werror"
           - os: macos-latest
             c_compiler: clang
             cpp_compiler: clang++
             build_type: MinSizeRel
+            cxx_flags: "-Wall -Wextra -Wshadow -Wpedantic -Werror"
 
     steps:
     - uses: actions/checkout@v4
@@ -46,6 +48,7 @@ jobs:
         cmake -B ${{ steps.strings.outputs.build-dir }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+        -DCMAKE_CXX_FLAGS="${{ matrix.cxx_flags}}"
         -S ${{ github.workspace }}
 
     - name: Build
