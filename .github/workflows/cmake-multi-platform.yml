@@ -50,4 +50,4 @@ jobs:
 
     - name: Build
       # --config is needed for windows
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+      run: cmake --build ${{ steps.strings.outputs.build-dir }} --config ${{ matrix.build_type }}
