@@ -48,12 +48,11 @@ public:
         }
 
         // Parse body if Content-Length is present
-        auto contentLength = request.headers.find("Content-Length");
-        if (contentLength != request.headers.end()) {
-            size_t length = std::stoul(contentLength->second);
+        if (auto it = request.headers.find("Content-Length"); it != request.headers.end()) {
+            size_t contentLength = std::stoul(it->second);
             std::string body;
             char c;
-            while (stream.get(c) && body.length() < length) {
+            while (stream.get(c) && body.length() < contentLength) {
                 body += c;
             }
             request.body = body;
@@ -134,7 +133,7 @@ private:
 class HTTPServer {
 private:
     int server_fd;
-    int port;
+    int port_;
     struct sockaddr_in address;
     static constexpr int BUFFER_SIZE = 1024;
 
@@ -143,7 +142,7 @@ private:
     std::unordered_map<std::string, handler_type> routes_;
 
 public:
-    HTTPServer(int port = 8080) : port(port) {
+    HTTPServer(int port = 8080) : port_(port) {
         // Create socket file descriptor
         if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
             throw std::runtime_error("Socket creation failed");
@@ -158,7 +157,7 @@ public:
         // Setup server address structure
         address.sin_family = AF_INET;
         address.sin_addr.s_addr = INADDR_ANY;
-        address.sin_port = htons(port);
+        address.sin_port = htons(port_);
 
         // Bind socket to port
         if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
@@ -176,7 +175,7 @@ public:
             throw std::runtime_error("Listen failed");
         }
 
-        std::cout << "Server listening on port " << port << std::endl;
+        std::cout << "Server listening on port " << port_ << std::endl;
 
         while (true) {
             handleConnection();
