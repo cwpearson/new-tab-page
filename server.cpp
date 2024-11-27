@@ -1,7 +1,7 @@
+#include <functional>
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <cstring>
 #include <string_view>
 #include <unordered_map>
 
@@ -208,16 +208,10 @@ private:
 
         Context ctx(req);
 
-        Response response(
-            404,
-            {{"Content-Type", "text"}},
-            "not found"
-        );
+        Response response(404, {{"Content-Type", "text"}}, "not found");
 
-        for (const auto &kv : routes_) {
-            if (kv.first == req.path) {
-                response = kv.second(ctx);
-            }
+        if (auto it = routes_.find(req.path); it != routes_.end()) {
+            response = it->second(ctx);
         }
 
         std::cout << req.method << " " << req.path << " " << response.code() << "\n";
