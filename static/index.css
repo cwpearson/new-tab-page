@@ -96,21 +96,25 @@ main {
     position: relative;
     height: 24px;
     margin: 1rem 0;
-  }
+}
 
-  .progress-bar {
+.progress-bar {
     height: 100%;
     width: 0%;
     background-color: #4CAF50;
     transition: width 0.5s ease-in-out;
-  }
+}
 
-  .progress-bar.complete {
+.progress-bar.complete {
     background-color: #f44336;
-  }
+}
 
-  footer {
+footer {
     padding: 20px;
     width: 100%;
     text-align: center;
-  }
+}
+footer a {
+    text-decoration: none;
+    color: lightblue;
+}
