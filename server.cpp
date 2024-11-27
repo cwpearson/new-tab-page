@@ -199,22 +199,22 @@ private:
             return;
         }
 
-        // Read incoming request
-        read(new_socket, buffer, BUFFER_SIZE);
-        // std::cout << "Received request:\n" << buffer << std::endl;
-
-        auto req = Request::parse(buffer, BUFFER_SIZE);
-        // req.debug_print();
-
-        Context ctx(req);
-
         Response response(404, {{"Content-Type", "text"}}, "not found");
 
-        if (auto it = routes_.find(req.path); it != routes_.end()) {
-            response = it->second(ctx);
-        }
+        // Read incoming request
+        if (ssize_t count = read(new_socket, buffer, BUFFER_SIZE); count == -1) {
+            response = Response(503, {{"Content-Type", "text"}}, "socket read error");
+        } else {
+            auto req = Request::parse(buffer, BUFFER_SIZE);
+            // req.debug_print();
+            Context ctx(req);
 
-        std::cout << req.method << " " << req.path << " " << response.code() << "\n";
+            if (auto it = routes_.find(req.path); it != routes_.end()) {
+                response = it->second(ctx);
+            }
+
+            std::cout << req.method << " " << req.path << " " << response.code() << "\n";
+        }
 
         std::string responseStr = response.to_string();
         send(new_socket, responseStr.c_str(), responseStr.length(), 0);
