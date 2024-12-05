@@ -30,3 +30,8 @@ bash scripts/macos-uninstall.sh
 1. Install [New Tab Override](https://addons.mozilla.org/en-US/firefox/addon/new-tab-override/) extension
 2. Set "Option" to "custom URL"
 3. Set "URL" to "http://localhost:8081"
+
+## Roadmap
+
+- [ ] kokkos/kokkos and cwpearson/kokkos
+- [ ] change binary to `new-tab-page-server` so it has a better name in MacOS login items
